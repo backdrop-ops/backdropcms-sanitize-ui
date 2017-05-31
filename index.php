@@ -2,19 +2,27 @@
 // Setting the time zone.
 date_default_timezone_set('UTC');
 
+/**
+ * Create database dump links.
+ */
 function database_dumps() {
   $output = array();
   exec('ls sanitized/*.gz', $output);
   foreach ($output as $out) {
-    printf('<li><a href="https://sanitize.backdropcms.org/%s" title="Download">%s</a></li>', $out, $out);
+    $dump = explode('/', $out);
+    printf('<li><a href="https://sanitize.backdropcms.org/%s" title="Download">%s</a></li>', $out, $dump[1]);
   }
 }
 
+/**
+ * Create file archive links.
+ */
 function file_archives() {
   $output = array();
   exec('ls files_backups/*.tar.gz', $output);
   foreach ($output as $out) {
-    printf('<li><a href="https://sanitize.backdropcms.org/%s" title="Download">%s</a></li>', $out, $out);
+    $archive = explode('/', $out);
+    printf('<li><a href="https://sanitize.backdropcms.org/%s" title="Download">%s</a></li>', $out, $archive[1]);
   }
 }
 
