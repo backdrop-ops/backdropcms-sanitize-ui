@@ -1,0 +1,3 @@
+sanitized/*.gz
+files_backups/*.tar.gz
+*.htpasswd
