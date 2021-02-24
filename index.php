@@ -5,8 +5,9 @@
 function table_rows() {
   $paths = array(
     'backdropcms.org' => 'BackdropCMS',
-    'api.backdropcms.org' => 'API',
+    'docs.backdropcms.org' => 'Docs',
     'forum.backdropcms.org' => 'Forum',
+    'events.backdropcms.org' => 'Events',
   );
 
   foreach ($paths as $path => $name) {
@@ -37,8 +38,9 @@ function create_row($name, $db_path, $file_path) {
     $date = $db_filename_parts[1] . ' ' . $db_filename_parts[2] . ' ' . $db_filename_parts[3];
   }
 
-  $db_link = '<a href="https://sanitize.backdropcms.org/' . $db_path . '">Database</a>';
-  $file_link = '<a href="https://sanitize.backdropcms.org/' . $file_path . '">Files</a>';
+  $host = filter_input(INPUT_SERVER, 'HTTP_HOST');
+  $db_link = sprintf('<a href="https://%s/%s">Database</a>', $host, $db_path);
+  $file_link = sprintf('<a href="https://%s/%s">Files</a>', $host, $file_path);
 
   print '<tr class="' . $class . '">
             <td>' . $name . '</td>
