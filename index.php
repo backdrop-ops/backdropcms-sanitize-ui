@@ -1,6 +1,6 @@
 <?php
 /**
- * Get table rows for database and files backups.
+ * Get table rows for database, (optional) CiviCRM database, and files backups.
  */
 function table_rows() {
   $paths = array(
@@ -11,13 +11,15 @@ function table_rows() {
   );
 
   foreach ($paths as $path => $name) {
-    $databases = array();
-    $files = array();
-
-    exec("ls $path/sanitized/*.sql.gz", $databases);
+    $dbs = $dbs_civi = $files = array();
+    exec("ls $path/sanitized/*.sql.gz", $dbs);
+    exec("ls $path/sanitized_civi/*.sql.gz", $dbs_civi);
     exec("ls $path/files_backups/*.tar.gz", $files);
-    foreach (array_reverse($databases) as $id => $database) {
-      create_row($name, $database, array_reverse($files)[$id]);
+    $r_dbs = array_reverse($dbs);
+    $r_dbs_civi = array_reverse($dbs_civi);
+    $r_files = array_reverse($files);
+    foreach ($r_dbs as $id => $db) {
+      create_row($name, $db, (isset($r_dbs_civi[$id]) ? $r_dbs_civi[$id] : ''), $r_files[$id]);
     }
   }
 }
@@ -25,7 +27,7 @@ function table_rows() {
 /**
  * Print the HTML for a single table row.
  */
-function create_row($name, $db_path, $file_path) {
+function create_row($name, $db_path, $db_civi_path, $file_path) {
   $class = '';
   $db_path_parts = explode('/', $db_path);
   $db_filename_parts = explode('-', $db_path_parts[2]);
@@ -40,12 +42,13 @@ function create_row($name, $db_path, $file_path) {
 
   $host = filter_input(INPUT_SERVER, 'HTTP_HOST');
   $db_link = sprintf('<a href="https://%s/%s">Database</a>', $host, $db_path);
+  $db_civi_link = sprintf('<a href="https://%s/%s">CiviCRM</a>', $host, $db_civi_path);
   $file_link = sprintf('<a href="https://%s/%s">Files</a>', $host, $file_path);
 
   print '<tr class="' . $class . '">
             <td>' . $name . '</td>
             <td>' . $date . '</td>
-            <td>' . $db_link . ' :: ' . $file_link . '</td>
+            <td>' . $db_link . ' :: ' . (!empty($db_civi_path) ? $db_civi_link . ' :: ' : '') . $file_link . '</td>
           </tr>';
 }
 ?>
