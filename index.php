@@ -19,7 +19,7 @@ function table_rows() {
     $r_dbs_civi = array_reverse($dbs_civi);
     $r_files = array_reverse($files);
     foreach ($r_dbs as $id => $db) {
-      create_row($name, $db, (isset($r_dbs_civi[$id]) ? $r_dbs_civi[$id] : ''), $r_files[$id]);
+      create_row($name, $db, $r_files[$id], (isset($r_dbs_civi[$id]) ? $r_dbs_civi[$id] : ''));
     }
   }
 }
@@ -27,7 +27,7 @@ function table_rows() {
 /**
  * Print the HTML for a single table row.
  */
-function create_row($name, $db_path, $db_civi_path, $file_path) {
+function create_row($name, $db_path, $file_path, $db_civi_path) {
   $class = '';
   $db_path_parts = explode('/', $db_path);
   $db_filename_parts = explode('-', $db_path_parts[2]);
